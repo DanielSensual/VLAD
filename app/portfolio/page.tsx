@@ -1,16 +1,30 @@
 import type { Metadata } from 'next';
 import Header from '@/components/Header';
-import PortfolioGrid from '@/components/PortfolioGrid';
+import WorksGallery from '@/components/WorksGallery';
+import RedStripe from '@/components/RedStripe';
+import ScrollReveal from '@/components/ScrollReveal';
 import Footer from '@/components/Footer';
 import { portfolioItems } from '@/lib/content';
 
 export const metadata: Metadata = {
-  title: 'Portfolio — J.VLADIMIR',
+  title: 'Works — J.VLADIMIR',
   description:
-    'Red Stripe Rabbits, One-of-One Originals, The Icons, and After Hours. Contemporary pop art sculptures and mixed-media works by J. Vladimir.',
+    'Red Stripe Rabbits, The Icons, and After Hours. Contemporary pop art sculptures and mixed-media originals by J. Vladimir.',
 };
 
+const COLLECTION_ORDER = [
+  'The Icons',
+  'After Hours',
+  'Red Stripe Rabbits',
+] as const;
+
 export default function PortfolioPage() {
+  // Group works by collection so each section reads like a gallery wall.
+  const grouped = COLLECTION_ORDER.map((collection) => ({
+    collection,
+    items: portfolioItems.filter((item) => item.category === collection),
+  })).filter((group) => group.items.length > 0);
+
   return (
     <>
       <Header />
@@ -21,11 +35,11 @@ export default function PortfolioPage() {
           <span className="label mb-md" style={{ display: 'block' }}>
             The Collection
           </span>
-          <h1 className="display-xl">Portfolio</h1>
-          <div className="stripe-divider-center mt-md mb-md" />
+          <h1 className="display-xl">Works</h1>
+          <RedStripe variant="paint" width="80px" centered delay={0.2} style={{ marginTop: 'var(--space-md)' }} />
           <p
-            className="body-lg"
-            style={{ maxWidth: '600px', margin: '0 auto' }}
+            className="body-lg mt-md"
+            style={{ maxWidth: '600px', margin: 'var(--space-md) auto 0' }}
           >
             Limited-edition Red Stripe sculptures, one-of-one mixed-media
             originals, and contemporary pop-art works. Each piece is built with
@@ -34,12 +48,37 @@ export default function PortfolioPage() {
         </div>
       </section>
 
-      {/* Full Grid */}
-      <section className="section">
-        <PortfolioGrid items={portfolioItems} />
-      </section>
+      {/* Grouped collections */}
+      {grouped.map(({ collection, items }) => (
+        <section key={collection} className="section">
+          <ScrollReveal>
+            <div
+              className="container"
+              style={{ marginBottom: 'var(--space-lg)' }}
+            >
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'baseline',
+                  justifyContent: 'space-between',
+                  gap: 'var(--space-md)',
+                  flexWrap: 'wrap',
+                }}
+              >
+                <h2 className="display-md">{collection}</h2>
+                <span className="label">
+                  {items.length} {items.length === 1 ? 'piece' : 'pieces'}
+                </span>
+              </div>
+              <RedStripe variant="divider" width="100%" thickness={1} style={{ marginTop: 'var(--space-sm)' }} />
+            </div>
+          </ScrollReveal>
 
-      {/* Shop CTA */}
+          <WorksGallery items={items} />
+        </section>
+      ))}
+
+      {/* Collect CTA */}
       <section
         className="section-lg"
         style={{ background: 'var(--bg-secondary)' }}
@@ -49,7 +88,7 @@ export default function PortfolioPage() {
             Acquire
           </span>
           <h2 className="display-md">Collector Confidence</h2>
-          <div className="stripe-divider-center mt-md mb-md" />
+          <RedStripe variant="wet" width="60px" centered delay={0.1} style={{ margin: 'var(--space-md) auto' }} />
 
           <div
             style={{
@@ -85,13 +124,8 @@ export default function PortfolioPage() {
             ))}
           </div>
 
-          <a
-            href="https://jvladimir.store"
-            className="btn-solid"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Shop the Collection
+          <a href="/collect" className="btn-solid">
+            Enter the Vault
           </a>
         </div>
       </section>

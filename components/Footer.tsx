@@ -1,3 +1,5 @@
+import { navItems, siteConfig } from '@/lib/content';
+
 export default function Footer() {
   return (
     <footer className="footer">
@@ -5,29 +7,22 @@ export default function Footer() {
         <div className="footer-grid">
           <div>
             <div className="footer-brand">J.Vladimir &amp; Company</div>
-            <p className="body-sm mt-sm">
-              Artist. Photographer. Design.
-            </p>
+            <p className="body-sm mt-sm">{siteConfig.tagline}</p>
           </div>
 
           <div className="footer-links">
-            <a href="/portfolio" className="footer-link">
-              Portfolio
-            </a>
-            <a href="/story" className="footer-link">
-              Story
-            </a>
-            <a href="/contact" className="footer-link">
-              Contact
-            </a>
-            <a
-              href="https://jvladimir.store"
-              className="footer-link"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Shop
-            </a>
+            {navItems.map((item) => (
+              <a
+                key={item.href}
+                href={item.href}
+                className="footer-link"
+                {...(item.external
+                  ? { target: '_blank', rel: 'noopener noreferrer' }
+                  : {})}
+              >
+                {item.label}
+              </a>
+            ))}
           </div>
         </div>
 
@@ -38,12 +33,11 @@ export default function Footer() {
           </span>
 
           <div style={{ display: 'flex', gap: 'var(--space-md)', alignItems: 'center' }}>
-            <span className="footer-copy">Orlando · Miami · NYC</span>
-            <a
-              href="mailto:mail@jvladimir.com"
-              className="footer-link"
-            >
-              mail@jvladimir.com
+            <span className="footer-copy">
+              {siteConfig.locations.join(' · ')}
+            </span>
+            <a href={`mailto:${siteConfig.email}`} className="footer-link">
+              {siteConfig.email}
             </a>
           </div>
         </div>

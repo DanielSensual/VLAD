@@ -19,8 +19,8 @@ export default function StoryPage() {
         style={{ minHeight: '60vh' }}
       >
         <img
-          src="/stripe-story.jpg"
-          alt="J.Vladimir — The Artist"
+          src="/photography/ballet-red.jpg"
+          alt="J.Vladimir — Movement and the Red Stripe"
           className="full-bleed-image"
           loading="eager"
         />
