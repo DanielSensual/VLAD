@@ -26,6 +26,21 @@ export const metadata: Metadata = {
       'Editorial fashion photographer and contemporary pop artist. The Red Stripe.',
     type: 'website',
     url: 'https://jvladimir.com',
+    images: [
+      {
+        url: '/og-image.jpg',
+        width: 1200,
+        height: 1200,
+        alt: 'J.Vladimir — Crown, mixed media with Red Stripe',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'J.VLADIMIR — Artist. Photographer. Design.',
+    description:
+      'Editorial fashion photographer and contemporary pop artist. The Red Stripe.',
+    images: ['/og-image.jpg'],
   },
 };
 

@@ -241,6 +241,48 @@ export const portfolioItems: PortfolioItem[] = [
     availability: 'available',
   }),
 
+  // --- PRIVATE COLLECTION ---
+  work({
+    slug: 'legends-never-die',
+    title: 'Legends Never Die',
+    category: 'Private Collection',
+    imageSrc: '/portfolio/originals/legends-never-die.jpg',
+    storeUrl: 'https://jvladimir.store/products/legends-never-die',
+    price: '$15,000',
+    medium: 'Mixed media on canvas',
+    dimensions: '48" × 48"',
+    edition: '1 of 1',
+    availability: 'available',
+    description:
+      'The crown jewel of the collection. Museum-scale. Singular. A monument to permanence in a disposable age.',
+  }),
+
+  // --- ADDITIONAL ORIGINALS ---
+  work({
+    slug: 'aud',
+    title: 'Aud',
+    category: 'The Icons',
+    imageSrc: '/portfolio/originals/aud.jpg',
+    storeUrl: 'https://jvladimir.store/products/aud',
+    price: '$5,000',
+    medium: 'Mixed media on canvas',
+    dimensions: '48" × 48"',
+    edition: '1 of 1',
+    availability: 'available',
+  }),
+  work({
+    slug: 'jack',
+    title: 'Jack',
+    category: 'The Icons',
+    imageSrc: '/portfolio/originals/jack.jpg',
+    storeUrl: 'https://jvladimir.store/products/jack',
+    price: '$5,000',
+    medium: 'Mixed media on canvas',
+    dimensions: '48" × 48"',
+    edition: '1 of 1',
+    availability: 'available',
+  }),
+
   // --- RED STRIPE RABBITS ---
   work({
     slug: 'panda',

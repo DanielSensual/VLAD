@@ -50,6 +50,14 @@ const TIERS: Array<{
     priceRange: '$5,000 – $7,000+',
     edition: '1 of 1',
   },
+  {
+    collection: 'Private Collection',
+    eyebrow: 'Tier IV · Private',
+    heading: 'Private Collection',
+    body: 'The highest-tier originals. Museum-scale. Singular. Irreplaceable. These are the works that define the legacy.',
+    priceRange: '$15,000',
+    edition: '1 of 1',
+  },
 ];
 
 export default async function CollectPage() {
