@@ -1,12 +1,12 @@
-# J.VLADIMIR — Claude Code Handoff Brief
-## Gallery-Grade Portfolio Overhaul for an Editorial Photographer × Pop Artist
-*Handoff prepared: May 12, 2026 — from Antigravity to Claude Code Opus Trinity*
+# J.VLADIMIR — Claude Code Handoff Brief v2
+## Gallery-Grade Portfolio — Phase 1–3 Complete, Phase 4 Next
+*Handoff updated: May 12, 2026 — from Claude Opus 4.7 session "nice-wu-49834b"*
 
 ---
 
 ## 0. Executive Summary
 
-You're taking over a Next.js 16 portfolio site for **J.Vladimir** — an Orlando-based editorial fashion photographer and contemporary pop artist whose signature move is a single horizontal red stripe painted across his subjects' eyes. The site just completed its foundational design system overhaul (warm cream gallery palette, Fraunces typography, ambient effects) and is **deployed live** at:
+You're taking over a Next.js 16 portfolio site for **J.Vladimir** — an Orlando-based editorial fashion photographer and contemporary pop artist whose signature is a single horizontal red stripe painted across his subjects' eyes. **Phases 1–3 are complete and live.**
 
 - **Production:** https://jvladimir.vercel.app
 - **GitHub:** https://github.com/DanielSensual/VLAD.git
@@ -14,7 +14,15 @@ You're taking over a Next.js 16 portfolio site for **J.Vladimir** — an Orlando
 - **Shopify Store (existing):** https://jvladimir.store
 - **Current Wix Site (being replaced):** https://jvladimir.com
 
-The brand thesis: **"The Red Stripe is the brand, not a decoration."** Every UI decision should pass through this lens.
+The brand thesis: **"The Red Stripe is the brand, not a decoration."** Every UI decision must pass through this lens.
+
+**Latest git log:**
+```
+7b0894a  Merge worktree: Gallery overhaul Phase 1–3
+c0b1663  Gallery overhaul — Phase 1–3 complete
+3980164  Claude Code handoff brief
+651563b  Gallery Design System Overhaul
+```
 
 ---
 
@@ -25,288 +33,333 @@ The brand thesis: **"The Red Stripe is the brand, not a decoration."** Every UI 
 | Framework | Next.js (App Router) | 16.2.6 |
 | React | React | 19.2.4 |
 | Animation | Framer Motion | 12.38.0 |
+| Scroll / GSAP | GSAP + @gsap/react | ✅ installed |
 | Styling | Vanilla CSS (globals.css) | — |
 | Typography | Fraunces (variable serif) + Inter Tight | Google Fonts |
 | Deployment | Vercel | Auto-deploy from GitHub |
 | Build | Turbopack | — |
 | Package Manager | npm | — |
 
-### No Tailwind. Vanilla CSS only. This is a non-negotiable project rule.
+### No Tailwind. Vanilla CSS only. Non-negotiable.
 
 ---
 
-## 2. File Map
+## 2. File Map (Current State)
 
 ```
 jvladimir/
 ├── app/
-│   ├── globals.css          ← Full design system (tokens, components, animations)
-│   ├── layout.tsx           ← Root layout with ambient effects
-│   ├── page.tsx             ← Homepage (hero, portfolio grid, manifesto, CTA)
-│   ├── contact/page.tsx     ← Contact page
-│   ├── portfolio/page.tsx   ← Full portfolio grid
-│   └── story/page.tsx       ← The Stripe philosophy / about
+│   ├── globals.css              ← Full design system — tokens, all component CSS
+│   ├── layout.tsx               ← Root layout + metadataBase + AmbientEffects
+│   ├── loading.tsx              ← ✅ Branded Red Stripe CSS progress bar (92% hold)
+│   ├── page.tsx                 ← Homepage: Hero → Clients → Editorial → PrivateViewingRail → Manifesto → CTA
+│   ├── collect/page.tsx         ← ✅ Vault page: tiered collector layout (Rabbits/Icons/After Hours/Commissions)
+│   ├── contact/page.tsx         ← Contact form (no backend wired yet)
+│   ├── portfolio/page.tsx       ← ✅ Works gallery grouped by collection with RedStripe dividers
+│   ├── story/page.tsx           ← The Stripe philosophy / artist bio
+│   └── works/
+│       └── [slug]/page.tsx      ← ✅ 20 static detail pages — image, museum data, Acquire CTA, related works
 ├── components/
-│   ├── AmbientEffects.tsx   ← StripeProgress, GrainOverlay, WetPaintFilters
-│   ├── ArtCard3D.tsx        ← 3D tilt portfolio cards with light reflections
-│   ├── CursorGlow.tsx       ← Legacy cursor (replaced by StripeCursor, can delete)
-│   ├── EditorialSection.tsx ← Side-by-side image + text editorial layout
-│   ├── Footer.tsx           ← Site footer
-│   ├── Header.tsx           ← Dynamic header (white over hero, dark on scroll)
-│   ├── Hero.tsx             ← Parallax hero with banner image
-│   ├── PortfolioGrid.tsx    ← Masonry-style portfolio grid
-│   ├── ScrollReveal.tsx     ← Intersection Observer reveal animations
-│   └── StripeCursor.tsx     ← Custom cursor that becomes The Red Stripe on hover
+│   ├── AmbientEffects.tsx       ← StripeProgress bar, GrainOverlay, WetPaintFilters SVG
+│   ├── ArtCard3D.tsx            ← ✅ 3D tilt cards + museum-caption overlay + viewTransitionName + touch guard
+│   ├── ArtViewer.tsx            ← ✅ Full-screen lightbox: pinch-zoom, swipe, keyboard nav, scroll lock
+│   ├── CollectTier.tsx          ← ✅ Editorial vault section per collection with availability dots
+│   ├── EditorialSection.tsx     ← Side-by-side image + text, Ken Burns zoom
+│   ├── Footer.tsx               ← ✅ Consumes navItems + siteConfig from content.ts (DRY)
+│   ├── Header.tsx               ← ✅ Consumes navItems from content.ts, dynamic white→dark on scroll
+│   ├── Hero.tsx                 ← Parallax hero with banner image + scroll indicator
+│   ├── PortfolioGrid.tsx        ← Legacy grid (not used on any live page — can delete)
+│   ├── PrivateViewingRail.tsx   ← ✅ GSAP ScrollTrigger pinned horizontal gallery (touch: scroll-snap)
+│   ├── RedStripe.tsx            ← ✅ Reusable brush-stroke stripe: paint/divider/wet variants, Framer reveal
+│   ├── ScrollReveal.tsx         ← Intersection Observer stagger reveal
+│   ├── StripeCursor.tsx         ← Custom cursor: dot at rest → stripe on artwork hover (desktop only)
+│   └── WorksGallery.tsx         ← ✅ Wraps ArtCard3D grid; intercepts touch → ArtViewer
 ├── lib/
-│   └── content.ts           ← All site content, portfolio items, nav, clients
+│   ├── content.ts               ← ✅ Full data model: 20 works, PhotographyItems, CollectorTiers,
+│   │                               navItems, clients, siteConfig, getWorkBySlug(), getRelatedWorks()
+│   └── shopify.ts               ← ✅ Storefront API scaffold — INACTIVE until env token set
 ├── public/
-│   ├── hero-banner.avif     ← JV hero banner (dark editorial shoot)
-│   ├── hero.jpg             ← Fallback hero
-│   ├── stripe-story.jpg     ← Story page image
-│   └── portfolio/           ← 8 artwork images + vlad-portrait.png (JV logo)
-├── next.config.ts           ← Currently minimal — needs image domains, viewTransition
-├── package.json
+│   ├── hero-banner.avif         ← ✅ Real JV editorial shoot, 2400×1603 (homepage hero)
+│   ├── photography/
+│   │   ├── stripe-portrait.jpg  ← ✅ Real JV editorial: blue-paint model w/ red slash across eyes
+│   │   ├── ballet-red.jpg       ← ✅ Real JV: all-red ballet dancer, J.VLADIMIR branded (story hero)
+│   │   ├── editorial-bw-portrait.jpg ← Nikon D810, J.VLADIMIR © — tattooed male editorial
+│   │   ├── vintage-portrait.jpg ← J.VLADIMIR © warm vintage portrait
+│   │   ├── calvin-klein.jpg     ← Commercial (1600×1600 Wix crop — needs re-download)
+│   │   ├── emerging-artist.jpg  ← Editorial (1600×1600 Wix crop)
+│   │   ├── fashion-art.jpg      ← Editorial (1600×1600 Wix crop)
+│   │   ├── london-model.jpg     ← Studio (1600×1600 Wix crop)
+│   │   ├── ballet-elegant.jpg   ← Ballet (1600×1600 Wix crop)
+│   │   ├── studio-portrait.jpg  ← Portrait (1600×1600 Wix crop)
+│   │   └── vintage-couture.jpg  ← Editorial (1600×1600 Wix crop)
+│   ├── portfolio/
+│   │   ├── originals/           ← ✅ 13 real JPGs from jvladimir.store (crown, ghost, blondie …)
+│   │   ├── rabbits/             ← ✅ 7 real PNGs from jvladimir.store (golden-goose, panda …)
+│   │   └── vlad-portrait.png    ← JV brand logo / video screenshot (NOT a portrait of JV)
+│   └── [vlad-tux.jpg]          ← ⏳ MISSING — user needs to provide this (see Section 10)
+├── next.config.ts               ← ✅ viewTransition enabled, AVIF/WebP formats, Shopify CDN remotePatterns
+├── package.json                 ← gsap + @gsap/react added
 └── tsconfig.json
 ```
 
 ---
 
-## 3. Design System (Current State)
+## 3. Design System
 
 ### Color Tokens (`globals.css :root`)
 
 ```css
-/* Surfaces — warm gallery palette */
---bg-primary: hsl(36 12% 92%);      /* Warm cream canvas */
---bg-secondary: hsl(36 18% 86%);    /* Slightly darker cream */
---bg-elevated: hsl(36 12% 95%);     /* Card surfaces */
---bg-overlay: hsla(36 12% 92% / 0.85);
---bg-ink: hsl(0 0% 4%);             /* Near-black for Maison Noir sections */
+/* Surfaces */
+--bg-primary:   hsl(36 12% 92%);       /* Warm cream canvas */
+--bg-secondary: hsl(36 18% 86%);       /* Slightly darker cream */
+--bg-elevated:  hsl(36 12% 95%);       /* Card surfaces */
+--bg-ink:       hsl(0 0% 4%);          /* Near-black — manifesto / ink sections */
 
-/* The Red Stripe — calibrated to actual paint */
---stripe: hsl(358 78% 46%);         /* Primary brand red */
+/* The Red Stripe */
+--stripe:       hsl(358 78% 46%);      /* Primary brand red */
 --stripe-hover: hsl(358 78% 40%);
---stripe-glow: hsl(2 85% 58% / 0.25);
---stripe-deep: hsl(355 72% 32%);
---stripe-wet: hsl(355 80% 38%);
+--stripe-glow:  hsl(2 85% 58% / 0.25);
+--stripe-deep:  hsl(355 72% 32%);
+--stripe-wet:   hsl(355 80% 38%);
 
-/* Gilt — for $5K+ prices */
---gilt: hsl(40 38% 58%);
---gilt-deep: hsl(38 42% 38%);
+/* Gilt — collector pricing */
+--gilt:         hsl(40 38% 58%);
+--gilt-deep:    hsl(38 42% 38%);
 ```
 
 ### Typography
-
 - **Display:** Fraunces variable serif, weight 280, `font-variation-settings: 'opsz' 144`
-- **Body:** Inter Tight, weight 380, size 1.0625rem
-- **Eyebrow/Label:** Inter Tight, 0.72rem, letter-spacing 0.22em, uppercase
-- **Fluid type scale:** `--display-1` through `--display-3` with clamp()
+- **Body:** Inter Tight, weight 380, 1.0625rem
+- **Label/Eyebrow:** Inter Tight, 0.72rem, letter-spacing 0.22em, uppercase
 
-### Ambient Effects (Active in Layout)
-
-1. **StripeProgress** — 3px red scroll progress bar, top of viewport
-2. **StripeCursor** — Custom cursor: small dot at rest, horizontal stripe on artwork hover
-3. **GrainOverlay** — SVG feTurbulence film grain, 6% opacity, mix-blend-mode: overlay
-4. **WetPaintFilters** — SVG displacement filter (`#wet-paint`) for deckled stripe edges
+### Active Ambient Effects (in layout.tsx)
+1. **StripeProgress** — 3px red scroll bar at viewport top
+2. **StripeCursor** — dot at rest → horizontal red stripe on `[data-stripe-hover]`
+3. **GrainOverlay** — SVG feTurbulence, 6% opacity, mix-blend-mode: overlay
+4. **WetPaintFilters** — SVG displacement filter `#wet-paint` for deckled stripe edges
 
 ---
 
-## 4. What Has Been Completed
+## 4. What Is Complete ✅
 
-- [x] Next.js 16 App Router scaffold with 4 routes (/, /portfolio, /story, /contact)
-- [x] Design system: warm cream + Stripe Crimson + ink sections
-- [x] Fraunces + Inter Tight typography with variable font settings
-- [x] Hero component with parallax, banner image, scroll indicator
-- [x] Header with dynamic color switching (white over hero → dark on scroll)
-- [x] ArtCard3D with mouse-responsive 3D tilt, radial light, stripe-sweep hover
-- [x] ScrollReveal with staggered intersection observer animations
-- [x] EditorialSection with Ken Burns zoom on images
-- [x] Dark ink manifesto section with JV quote
-- [x] Film grain overlay + wet-paint SVG filters
-- [x] Custom StripeCursor (desktop only, touch-disabled)
-- [x] Scroll progress stripe bar
-- [x] Content data model in `lib/content.ts`
-- [x] Footer with brand, links, locations
-- [x] Reduced motion accessibility support
-- [x] GitHub push + Vercel production deployment
-- [x] Build passes clean (TypeScript, no errors)
+### Phase 1 — Polish
+- [x] **RedStripe component** — `paint`, `divider`, `wet` variants; brush clip-path polygon; Framer Motion `whileInView` reveal; `prefers-reduced-motion` safe
+- [x] **IA rename** — Nav is now: Works / The Stripe / Collect / Contact / Instagram
+- [x] **Museum-card captions** — ArtCard3D hover shows title, medium, dimensions, edition, availability dot (red/grey/gilt)
+- [x] **Mobile touch safety** — `matchMedia('(hover: hover) and (pointer: fine)')` guards tilt JS; `@media (hover: none)` CSS disables 3D effects; ArtViewer opens on touch tap
+- [x] **CursorGlow.tsx deleted** — was dead code
+- [x] **Footer DRY** — consumes `navItems` + `siteConfig` from content.ts
 
----
+### Phase 2 — Premium Gallery
+- [x] **View Transitions API** — `experimental: { viewTransition: true }` in next.config.ts; `viewTransitionName` on artwork images in ArtCard3D and works/[slug]
+- [x] **PrivateViewingRail** — GSAP ScrollTrigger pinned horizontal gallery on homepage; touch scroll-snap fallback; tail card links to /portfolio
+- [x] **ArtViewer lightbox** — full-screen modal: pinch-to-zoom (Pointer Events), swipe pagination, double-tap 1×↔2×, keyboard (←→ Esc), scroll lock
+- [x] **WorksGallery** — intercepts touch taps → opens ArtViewer instead of navigating
+- [x] **Works detail pages** — `/works/[slug]` — 20 routes via `generateStaticParams`; sticky museum-data panel; `storeUrl` → "Acquire" CTA; `getRelatedWorks()` section
+- [x] **Branded loading state** — `app/loading.tsx` CSS-only Red Stripe progress bar
 
-## 5. What Needs To Be Done (Priority Order)
+### Phase 3 — Collector Commerce
+- [x] **lib/shopify.ts** — Storefront API client scaffolded: `getAllProducts()`, `getProductsByCollection()`, `isShopifyEnabled()` feature flag; **INACTIVE** — needs `SHOPIFY_STOREFRONT_API_TOKEN` in env
+- [x] **/collect page** — tiered vault: Rabbits ($777) / The Icons ($5K–$6.5K) / After Hours ($5K–$7K+) / Tier IV Commissions; `isShopifyEnabled()` badge in hero; CollectTier component with availability dots
+- [x] **Content model** — `lib/content.ts`: full `PortfolioItem` type (slug, storeUrl, medium, dimensions, edition, availability); `work()` helper; `getWorkBySlug()`, `getRelatedWorks()`; 20 works total
 
-### Phase 1: Quick Wins — Polish What Exists
-
-1. **Reusable RedStripe Component** — A brush-stroke stripe with rough clip-path edges, gradient paint colors, and reveal animation. Use it everywhere: hero, cards, quotes, nav active states, section dividers. See ChatGPT report Section E, Quick Win 1 for the full clip-path polygon.
-
-2. **IA Rename** — Current nav: Portfolio / Story / Shop / Contact / Instagram. Target nav:
-   ```
-   Works / The Stripe / Collect / Commissions / Journal / Contact
-   ```
-   Update `lib/content.ts` navItems and Header.tsx.
-
-3. **Museum-Card Captions** — Upgrade ArtCard3D hover to show gallery-style labels: title, medium, year, dimensions, edition, availability status. See `WorkCaption` component spec in ChatGPT report.
-
-4. **Mobile Touch Safety** — Current 3D cards don't degrade on mobile. Add `@media (hover: none)` to disable tilt, add press-lift, hide cursor effects. CSS-only fix.
-
-5. **Vlad Tux Photo Integration** — The user has a hero-quality portrait of JV in a tuxedo with Red Stripe across his eyes, rabbit sculpture at his feet, floating brand strategy pages. It needs to be saved to `/public/` and used on the Story page or as an alternate hero.
-
-6. **Delete CursorGlow.tsx** — Replaced by StripeCursor.tsx but the file still exists.
-
-### Phase 2: Premium Gallery System
-
-7. **View Transitions API** — Enable `experimental: { viewTransition: true }` in next.config.ts. Use React `<ViewTransition>` for shared artwork image morphs (thumbnail → detail page hero). Progressive enhancement only.
-
-8. **GSAP Pinned Horizontal Gallery** — "Private Viewing Rail" — scroll-pinned horizontal gallery for Selected Works. Install `gsap` + `@gsap/react`. See ChatGPT report Medium 2 for full implementation.
-
-9. **Works Detail Pages** — Build `/works/[slug]/page.tsx` with full artwork detail: large image, title, year, medium, dimensions, edition info, price, inquiry CTA, related works.
-
-10. **Mobile Art Viewer** — Horizontal scroll-snap strip with full-screen modal viewer, pinch-to-zoom. See ChatGPT report Medium 3.
-
-11. **Red Stripe Loading State** — `app/loading.tsx` with RedStripe component that pauses at 92% then completes. Branded route transitions.
-
-### Phase 3: Collector Commerce
-
-12. **Shopify Storefront API Integration** — JV already has a Shopify store at jvladimir.store. Pull product data into the Next.js frontend. Split: Rabbits ($777) vs One-of-Ones ($5K+). Replace "Regular price / Sale price" with collector language.
-
-13. **Collect Page** — `/collect` with collector-tier layout, edition badges, availability states (available = red stripe accent, sold = grey strike, inquire = gilt).
-
-### Phase 4: Big Swings (WebGL)
-
-14. **Three.js Red Stripe Particle Hero** — Low-particle red paint field that reacts to cursor. Desktop only, lazy-loaded, behind `(hover: hover)` and `prefers-reduced-motion` checks.
-
-15. **3D Rabbit Viewer** — Interactive 3D rotation of the Red Stripe Rabbit sculpture using Three.js or `<model-viewer>`. Biggest commercial showstopper — let buyers inspect it like a luxury watch.
-
-16. **Shader Image Distortion** — Hover effect that distorts artwork like heat/wet paint. On 3-6 key images only, not the whole grid.
+### Image Audit
+- [x] **AI images purged** — `hero.jpg` (1024×1024 DALL-E) and `stripe-story.jpg` (1024×1024 AI) deleted
+- [x] **Real replacements** — `stripe-portrait.jpg` (real JV editorial: blue-paint model w/ red slash across eyes) on homepage; `ballet-red.jpg` (all-red J.VLADIMIR-branded ballet photo) on story page
+- [x] **20 real product images** — all pulled from jvladimir.store at native resolution
+- [x] **4 new editorial photos** — downloaded from jvladimir.com Wix CDN at native resolution
 
 ---
 
-## 6. Two Research Reports Are Available
+## 5. What Needs To Be Done Next
 
-Two independent deep-research reports were commissioned. They agree on ~80% of recommendations and diverge on font choice and exact red values:
+### Immediate (Blocking)
 
-### Claude 4.7 Report (commissioned May 10)
-- Recommended **Fraunces** serif (currently implemented)
-- Red: `hsl(358 78% 46%)` (currently implemented)
-- Warm cream: `hsl(36 12% 92%)` (currently implemented)
-- Emphasized View Transitions API + scroll-driven animations
-- Called for "Stripe Society" membership concept
+**A. The Tux Photo** *(user needs to provide)*
+JV has a brand-thesis portrait: him in a black tuxedo, Red Stripe painted across his eyes, Red Stripe Rabbit at his feet, brand strategy pages floating around him. This belongs as the Story page hero and an alternate homepage hero. Ask the user to drop it at `/public/vlad-tux.jpg`, then:
+- Replace `ballet-red.jpg` in `app/story/page.tsx` with `vlad-tux.jpg`
+- Consider using it in `EditorialSection` on homepage instead of `stripe-portrait.jpg`
 
-### ChatGPT Pro Report (commissioned May 12)
-- Recommended keeping **Cormorant Garamond** (used sparingly) — we went with Fraunces instead
-- Red system: `--stripe: hsl(359 95% 43%)`, `--stripe-paint: hsl(4 72% 46%)`, `--stripe-hot: hsl(342 75% 45%)`
-- Off-white: `hsl(34 30% 97%)` (lighter than current)
-- Has the most detailed `RedStripe` component with brush clip-path
-- Has the best GSAP horizontal gallery spec
-- Includes champagne/gold accent: `hsl(40 32% 59%)` (we implemented as `--gilt`)
-- Excellent mobile art viewer and touch interaction specs
+**B. Favicon & OG Image**
+No favicon or `opengraph-image` exists. Add to `app/`:
+- `favicon.ico` (use the vlad-portrait logo or red stripe)
+- `opengraph-image.png` — 1200×630, gallery-tone with artwork + wordmark
 
-### Where They Agree
-- The Red Stripe must be a living brand element, not decoration
-- White/cream gallery + near-black ink rooms for section contrast
-- Film grain overlay at very low opacity
-- GSAP for horizontal pinned gallery
-- View Transitions for artwork morphs
-- Gallery-style captions (title, medium, dimensions, edition, price)
-- Mobile touch-safe degradation of 3D effects
-- Lazy-load WebGL, desktop only
-- Performance budget: LCP ≤ 1.8s mobile, INP ≤ 120ms
+**C. Contact Form Backend**
+`app/contact/page.tsx` has a form with no `action`. Wire it to a Resend/Formspree/Vercel serverless endpoint. JV's email is `mail@jvladimir.com`.
 
-### Key Decision (Already Made)
-We went with **Fraunces** over Cormorant Garamond because its variable axes allow animated weight transitions and the optical sizing gives better control at display sizes. If JV prefers the more delicate literary feel of Cormorant, it's a one-line CSS change.
+**D. Shopify Live Inventory**
+When JV provides the token, add to Vercel env vars:
+```
+SHOPIFY_STOREFRONT_API_TOKEN=your_token_here
+SHOPIFY_STORE_DOMAIN=jvladimir.myshopify.com
+```
+`isShopifyEnabled()` in `lib/shopify.ts` will automatically flip `/collect` to live data.
+
+---
+
+### Phase 4 — WebGL Big Swings
+
+**E. Three.js Red Stripe Particle Hero**
+Low-particle red paint field reacting to cursor. Rules:
+- Desktop only: behind `(hover: hover) and (pointer: fine)` media query
+- Lazy-loaded: `const ThreeHero = dynamic(() => import('@/components/ThreeHero'), { ssr: false })`
+- `prefers-reduced-motion` disables particle motion (static field only)
+- Max 500 particles, instanced mesh for performance
+
+**F. 3D Rabbit Viewer**
+Interactive 3D rotation of the Red Stripe Rabbit sculpture. Biggest collector showstopper.
+- Need a `.glb` model file — JV must commission a 3D scan or use Meshy.ai
+- Use `<model-viewer>` web component for easy implementation (no Three.js needed)
+- Wire into `/works/golden-goose` (and other rabbit detail pages) as a tab: "Image / 3D View"
+
+**G. Shader Image Distortion**
+Hover effect on 3–6 key artworks that distorts like heat/wet paint.
+- Use `@react-three/fiber` with a displacement shader
+- Only on crown, ghost, golden-goose, stripe-portrait
+- Fallback: the existing ArtCard3D stripe-sweep is sufficient on non-WebGL browsers
+
+---
+
+### Phase 5 — Content Expansion
+
+**H. Photography Route** — `/works/photography`
+`lib/content.ts` has `photographyItems` but no route renders them yet. Build a masonry or editorial grid. The 7 existing images in `public/photography/` with square Wix crops need proper re-download:
+- **Problem:** `calvin-klein.jpg`, `london-model.jpg`, etc. are 1600×1600 (Wix `al_c` center-crop)
+- **Fix:** Re-download from `https://static.wixstatic.com/media/[hash]~mv2.jpg` (direct URL, no crop params)
+- **Method confirmed working:** direct URL without resize params returns native resolution
+
+**I. Commissions Page** — `/commissions`
+Nav currently shows "Works / The Stripe / Collect / Contact". Add "Commissions" between Collect and Contact:
+- Pricing tiers: editorial photography (day rate), custom pop-art canvas (starting $5K), rabbit commission
+- Lead form → triggers Resend email
+- Current `navItems` in `lib/content.ts` — add the item there and it propagates to Header + Footer automatically
+
+**J. Journal / Blog** — `/journal`
+Reserve the route. Can be MDX-based. Collector acquisition stories, process posts, exhibition recaps.
+
+---
+
+## 6. Architecture Notes
+
+### Single Source of Truth — `lib/content.ts`
+- `navItems` → consumed by Header, Footer, and all internal CTAs
+- `siteConfig` → email, locations, tagline — Footer, metadata, contact page
+- `portfolioItems` → all 20 works; drives /portfolio, /works/[slug], PrivateViewingRail, WorksGallery
+- **Adding a new work:** add one `work({...})` entry to `portfolioItems` array — detail page auto-generates via `generateStaticParams`
+
+### Shopify Feature Flag Pattern
+```ts
+// lib/shopify.ts
+export const isShopifyEnabled = () =>
+  Boolean(process.env.SHOPIFY_STOREFRONT_API_TOKEN);
+
+// In collect/page.tsx:
+{isShopifyEnabled() && <span className="label">Live inventory</span>}
+```
+When the env var is absent, `/collect` renders from static `content.ts` data. When present, it fetches live products. Zero code change needed.
+
+### View Transitions
+`viewTransitionName` is set on `<img>` in both ArtCard3D and `works/[slug]/page.tsx`. The browser handles the morph automatically when navigating thumbnail → detail. Must use `next/link` for navigation (not `<a href>`).
+
+### Touch vs. Desktop Split
+```ts
+const isHoverDevice = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+```
+Used in: ArtCard3D (guard tilt), WorksGallery (intercept tap → ArtViewer vs navigate), PrivateViewingRail (GSAP vs scroll-snap).
 
 ---
 
 ## 7. Brand Rules
 
-1. **The Red Stripe is the brand.** It should appear as scroll progress, cursor behavior, loading states, form submit animations, page transitions, and availability markers. NOT as random decoration.
-
-2. **White gallery silence.** The warm cream background should breathe. Don't fill every pixel. Let the work speak.
-
-3. **Ink rooms for contrast.** Alternate cream sections with near-black (`--bg-ink`) sections for manifesto quotes, collector tiers, Maison Noir energy.
-
-4. **Collector language, not e-commerce language.** Say "Inquire" not "Add to Cart." Say "Edition 23/77" not "In Stock." Say "Enter the Vault" not "Shop Now."
-
-5. **The stripe is rough, not perfect.** Clip-path polygons, displacement filters, gradient paint colors — never a clean CSS rectangle.
-
-6. **Performance is luxury.** A 4-second LCP is not premium, it's poverty. Budget: ≤180KB initial JS, ≤70KB CSS, hero image ≤320KB AVIF.
+1. **The Red Stripe is the brand.** Scroll progress, cursor, loading state, form submit, availability markers — it lives everywhere with purpose. Never decorative.
+2. **White gallery silence.** Cream background breathes. Don't fill every pixel.
+3. **Ink rooms for contrast.** Alternate cream with `--bg-ink` (near-black) for manifesto, collector tiers, Maison Noir energy.
+4. **Collector language only.** "Inquire" not "Add to Cart." "Edition 23/77" not "In Stock." "Enter the Vault" not "Shop Now."
+5. **The stripe is rough, not perfect.** Clip-path polygons, displacement filters, gradient — never a clean CSS rectangle.
+6. **Performance is luxury.** Budget: ≤180KB initial JS, ≤70KB CSS, hero ≤320KB AVIF. A 4-second LCP is not premium.
 
 ---
 
-## 8. JV's Actual Brand Assets
+## 8. Asset Inventory
 
-| Asset | Location | Status |
-|-------|----------|--------|
-| Hero banner (editorial shoot) | `/public/hero-banner.avif` | ✅ Live |
-| JV portrait logo | `/public/portfolio/vlad-portrait.png` | ✅ In repo |
-| Tux portrait (Red Stripe across eyes, rabbit at feet) | User has it — needs to save to Downloads | ⏳ Pending |
-| Portfolio artworks (8 pieces) | `/public/portfolio/*.jpg` | ✅ Live |
-| Red Stripe story image | `/public/stripe-story.jpg` | ✅ Live |
-| 3D Rabbit model (.glb) | Does not exist yet | ❌ Needed for 3D viewer |
-
-### Client Roster (for trust bar)
-Nike, Disney, Calvin Klein, Target, Mercedes-Benz, Ford Models, Wilhelmina
-
-### Store Inventory
-- **Red Stripe Rabbits** — $777 each, editions of 77
-- **One-of-One Originals** — $5,000–$7,000
-- **Private Collection** — $15,000
+| Asset | Path | Status |
+|-------|------|--------|
+| Hero banner (editorial shoot) | `/public/hero-banner.avif` | ✅ Real, 2400×1603 |
+| Stripe editorial (blue paint / red slash) | `/public/photography/stripe-portrait.jpg` | ✅ Real JV, 652KB |
+| Story hero (ballet dancer, red) | `/public/photography/ballet-red.jpg` | ✅ Real JV, 244KB |
+| 13 originals from jvladimir.store | `/public/portfolio/originals/` | ✅ All real |
+| 7 rabbit sculptures from jvladimir.store | `/public/portfolio/rabbits/` | ✅ All real |
+| JV brand logo/watermark | `/public/portfolio/vlad-portrait.png` | ✅ (note: not a JV portrait) |
+| **Tux portrait** (Red Stripe eyes, rabbit) | `/public/vlad-tux.jpg` | ⏳ **USER MUST PROVIDE** |
+| Photography grid images | `/public/photography/*.jpg` | ⚠️ 7 are 1600×1600 square crop |
+| 3D Rabbit model | — | ❌ Doesn't exist yet |
+| Favicon | — | ❌ Missing |
+| OG image | — | ❌ Missing |
 
 ---
 
 ## 9. Commands
 
 ```bash
-# Dev server
+# Dev server (use a free port — 3000-3003 often occupied)
 cd /Users/danielcastillo/Projects/Websites/jvladimir
-npm run dev          # → localhost:3000
+npm run dev          # → localhost:3000 (or -p 3005 if busy)
 
-# Build (verify before push)
+# Build check before pushing
 npm run build
 
-# Deploy (auto on push, or manual)
+# Deploy (auto on git push, or force manual)
 vercel --prod --yes
 
-# Git
+# Git remote
 git remote -v        # origin → https://github.com/DanielSensual/VLAD.git
 ```
 
 ---
 
-## 10. Known Issues / Cleanup
+## 10. The Tux Photo (Top Priority Asset)
 
-1. `components/CursorGlow.tsx` is dead code — replaced by StripeCursor. Delete it.
-2. `next.config.ts` is essentially empty — needs `images.formats`, `images.remotePatterns` (for Shopify CDN), and `experimental.viewTransition`.
-3. The hero `<Image>` component uses a local `.avif` file — should add blur placeholder.
-4. ArtCard3D doesn't degrade for touch devices — needs `@media (hover: none)` CSS.
-5. No `app/loading.tsx` exists yet — needs branded Red Stripe loading state.
-6. No favicon or OG image — needs JV brand assets.
+The user described a portrait that is the entire brand thesis in one frame:
+- JV seated in a **black tuxedo with bow tie**
+- **Red Stripe painted across his eyes** — rough, brush-like
+- **Red Stripe Rabbit sculpture at his feet**
+- Brand strategy / campaign pages floating around him
+- White studio background, watch, pocket square — luxury editorial energy
 
----
+**Where it goes:**
+1. `/public/vlad-tux.jpg` (or `.png`)
+2. `app/story/page.tsx` — replace `ballet-red.jpg` in the full-bleed hero
+3. `app/page.tsx` — consider as the `EditorialSection` imageSrc for "The Stripe" section (replacing `stripe-portrait.jpg`)
 
-## 11. The Tux Photo (Critical Asset)
-
-The user showed a portrait of JV that ChatGPT Pro's report describes as the entire brand thesis in one image:
-- JV seated in a black tuxedo with bow tie
-- Red Stripe painted across his eyes (rough, brush-like)
-- Red Stripe Rabbit sculpture at his feet
-- Brand strategy / campaign pages floating in the air around him
-- White studio background
-- Watch on wrist, pocket square — luxury editorial energy
-
-This image should be the **Story page hero** or an **alternate homepage hero**. The user needs to save it to the project — ask them to place it at `/public/vlad-tux.jpg` or similar.
+**How to ask:** *"Drop the tux portrait anywhere — Desktop, Downloads — and tell me the path. I'll resize, optimize, and wire it in."*
 
 ---
 
-## 12. Style Notes for Code
+## 11. Style Rules for Code
 
-- All CSS in `app/globals.css` — no CSS modules, no Tailwind
-- Use `var(--token)` for all colors, spacing, transitions
-- Framer Motion for client-side animations (already installed)
-- GSAP only if installing for the horizontal gallery (not yet installed)
-- Three.js only if implementing WebGL hero or 3D rabbit (not yet installed)
-- TypeScript strict mode — all components are `.tsx`
-- Imports use `@/` path alias (configured in tsconfig.json)
+- All CSS in `app/globals.css` — no CSS modules, no Tailwind, no `style` objects unless unavoidable
+- Use `var(--token)` for every color, spacing, transition value
+- Framer Motion for component-level animations (already installed)
+- GSAP + `@gsap/react` for scroll-triggered work (already installed — see PrivateViewingRail)
+- Three.js / `@react-three/fiber` only if implementing WebGL (Phase 4 — not yet installed)
+- TypeScript strict — all files are `.tsx` / `.ts`
+- Path alias `@/` maps to repo root (configured in tsconfig.json)
+- `'use client'` only when required (GSAP refs, Framer Motion, event listeners, browser APIs)
+
+---
+
+## 12. Known Remaining Issues
+
+| # | Issue | Severity |
+|---|-------|----------|
+| 1 | `public/photography/` images (7 of 11) are 1600×1600 Wix center-crop square | Low — not on any live route yet |
+| 2 | `components/PortfolioGrid.tsx` is unused (replaced by WorksGallery) | Low — can delete |
+| 3 | Contact form has no backend action | Medium — sends nowhere |
+| 4 | No favicon or OG image | Medium — affects SEO + social |
+| 5 | Tux portrait missing | High — Story page uses ballet placeholder |
+| 6 | Shopify token not set — /collect is static only | Low until JV ready to sell |
+| 7 | `vintage-portrait.jpg` is 1.9MB (missed the sips resize pass) | Low — run: `sips -Z 2400 --setProperty formatOptions 85 public/photography/vintage-portrait.jpg` |
 
 ---
 
