@@ -59,10 +59,10 @@ export default function StoryPage() {
         </ScrollReveal>
       </section>
 
-      {/* The Journey — Editorial with real photography */}
+      {/* The Journey — JV himself, the Red Stripe across his eyes */}
       <EditorialSection
-        imageSrc="/photography/editorial-bw-portrait.jpg"
-        imageAlt="J.Vladimir editorial B&W portrait — high contrast studio session"
+        imageSrc="/vlad-portrait-tux.avif"
+        imageAlt="J.Vladimir — the artist, with the Red Stripe across his eyes"
         label="Our Story"
         heading="Two Decades of Vision"
         body="For over two decades, J. Vladimir has pursued a singular mission: to create work that does more than capture a moment. His journey began in New York City, one of the most competitive creative landscapes in the world. Initially arriving with aspirations of becoming a supermodel, he quickly discovered that his true calling was not in front of the camera, but behind it."
