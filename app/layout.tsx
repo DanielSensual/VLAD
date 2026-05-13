@@ -4,6 +4,7 @@ import StripeCursor from '@/components/StripeCursor';
 import { StripeProgress, GrainOverlay, WetPaintFilters } from '@/components/AmbientEffects';
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://jvladimir.com'),
   title: 'J.VLADIMIR — Artist. Photographer. Design.',
   description:
     'J. Vladimir (b. Orlando) employs the figurative tradition of Pop with a painterly intervention — a single horizontal stripe — that transforms editorial fashion photography into fine art.',

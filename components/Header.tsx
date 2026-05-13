@@ -1,14 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-
-const navItems = [
-  { label: 'Portfolio', href: '/portfolio' },
-  { label: 'Story', href: '/story' },
-  { label: 'Shop', href: 'https://jvladimir.store', external: true },
-  { label: 'Contact', href: '/contact' },
-  { label: 'Instagram', href: 'https://instagram.com/jvladimir', external: true },
-];
+import { navItems } from '@/lib/content';
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);

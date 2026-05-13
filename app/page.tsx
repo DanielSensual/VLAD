@@ -1,7 +1,8 @@
 import Header from '@/components/Header';
 import Hero from '@/components/Hero';
 import EditorialSection from '@/components/EditorialSection';
-import ArtCard3D from '@/components/ArtCard3D';
+import PrivateViewingRail from '@/components/PrivateViewingRail';
+import RedStripe from '@/components/RedStripe';
 import ScrollReveal from '@/components/ScrollReveal';
 import Footer from '@/components/Footer';
 import { portfolioItems, clients } from '@/lib/content';
@@ -61,8 +62,8 @@ export default function HomePage() {
 
       {/* The Stripe — Editorial Section */}
       <EditorialSection
-        imageSrc="/stripe-story.jpg"
-        imageAlt="The Stripe — J.Vladimir's signature motif"
+        imageSrc="/photography/stripe-portrait.jpg"
+        imageAlt="The Red Stripe — J.Vladimir's signature motif across her eyes"
         label="The Signature"
         heading="The Red Stripe"
         body="Placed boldly across the eyes of his subjects, the stripe does not conceal identity — it invites the viewer to look beyond surface and question what they project onto the image. The stripe represents tension and power. Luxury and rebellion. Anonymity and recognition."
@@ -70,49 +71,21 @@ export default function HomePage() {
         cta={{ label: 'Read the Full Story', href: '/story' }}
       />
 
-      {/* Featured Works — 3D Art Cards */}
-      <section className="section-lg">
-        <ScrollReveal>
-          <div className="container text-center" style={{ marginBottom: 'var(--space-lg)' }}>
-            <span className="label mb-md" style={{ display: 'block' }}>
-              The Collection
-            </span>
-            <h2 className="display-lg">Selected Works</h2>
-            <div className="hero-stripe-line" style={{ animation: 'none', transform: 'scaleX(1)', opacity: 1, width: '80px', marginTop: 'var(--space-md)' }} />
-          </div>
-        </ScrollReveal>
-
-        <div className="perspective-container">
-          <div className="portfolio-grid">
-            {portfolioItems.slice(0, 4).map((item, i) => (
-              <ArtCard3D
-                key={item.href + item.title}
-                title={item.title}
-                category={item.category}
-                imageSrc={item.imageSrc}
-                href={item.href}
-                price={item.price}
-                index={i}
-              />
-            ))}
-          </div>
-        </div>
-
-        <div className="container text-center" style={{ marginTop: 'var(--space-lg)' }}>
-          <a href="/portfolio" className="btn-outline btn-magnetic">
-            View All Works
-          </a>
-        </div>
-      </section>
+      {/* Selected Works — Private Viewing Rail (GSAP pinned horizontal) */}
+      <PrivateViewingRail
+        items={portfolioItems.slice(0, 12)}
+        eyebrow="The Private Viewing"
+        heading="Selected Works"
+      />
 
       <EditorialSection
-        imageSrc="/portfolio/golden-goose.jpg"
+        imageSrc="/portfolio/rabbits/golden-goose.png"
         imageAlt="Red Stripe Rabbit — Golden Goose"
         label="Start Collecting"
         heading="From $777 to $15,000"
         body="Limited-edition Red Stripe sculptures and one-of-one mixed-media originals. Hand-finished contemporary pop-art works built with layered paint, resin, sculpture, and the signature Red Stripe. Available as 77-piece rabbit editions and one-of-one gallery-scale originals."
         reversed
-        cta={{ label: 'Enter the Vault', href: 'https://jvladimir.store' }}
+        cta={{ label: 'Enter the Vault', href: '/collect' }}
       />
 
       {/* Manifesto */}
@@ -132,7 +105,7 @@ export default function HomePage() {
             }}>
               &ldquo;When you think you recognize the subject, it&apos;s because the stripe asked you to finish the work.&rdquo;
             </blockquote>
-            <div className="reveal" style={{ width: '60px', height: '3px', background: 'var(--stripe)', margin: 'var(--space-md) auto', filter: 'url(#wet-paint)' }} />
+            <RedStripe variant="wet" width="60px" centered thickness={3} style={{ margin: 'var(--space-md) auto' }} />
             <span className="label reveal" style={{ color: 'hsla(0,0%,100%,0.4)' }}>J. Vladimir</span>
           </div>
         </ScrollReveal>
@@ -146,7 +119,7 @@ export default function HomePage() {
               Commissions & Inquiries
             </span>
             <h2 className="display-lg reveal">Let&apos;s Create Something</h2>
-            <div className="reveal" style={{ width: '60px', height: '3px', background: 'var(--stripe)', margin: 'var(--space-md) auto', filter: 'url(#wet-paint)' }} />
+            <RedStripe variant="wet" width="60px" centered thickness={3} style={{ margin: 'var(--space-md) auto' }} />
             <p className="body-lg mt-md reveal" style={{ maxWidth: '500px', margin: 'var(--space-md) auto 0' }}>
               Private acquisitions, custom commissions, editorial bookings, and
               collector inquiries.

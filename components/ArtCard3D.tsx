@@ -1,30 +1,65 @@
 'use client';
 
-import { useRef, useCallback } from 'react';
+import { useRef, useCallback, useEffect, useState } from 'react';
 import { motion, useInView } from 'framer-motion';
+import type { Availability, Collection } from '@/lib/content';
 
-interface ArtCard3DProps {
+export interface ArtCard3DProps {
   title: string;
-  category: string;
+  category: Collection | string;
   imageSrc: string;
   href: string;
+  /** Slug — drives the shared-element view-transition-name. */
+  slug?: string;
   price?: string;
+  medium?: string;
+  year?: number;
+  dimensions?: string;
+  edition?: string;
+  availability?: Availability;
   index?: number;
 }
+
+const AVAILABILITY_LABEL: Record<Availability, string> = {
+  available: 'Available',
+  sold: 'Sold',
+  inquire: 'Inquire',
+};
 
 export default function ArtCard3D({
   title,
   category,
   imageSrc,
   href,
+  slug,
   price,
+  medium,
+  year,
+  dimensions,
+  edition,
+  availability,
   index = 0,
 }: ArtCard3DProps) {
+  // External links (Shopify etc.) open in a new tab; internal /works/...
+  // navigate in-page so the View Transition shared-element morph can run.
+  const isExternal = /^https?:/.test(href);
   const cardRef = useRef<HTMLAnchorElement>(null);
   const shineRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(cardRef, { once: true, margin: '-80px' });
 
+  // Skip the tilt + shine wiring on touch devices — onMouseMove fires
+  // once on tap and never resets, leaving the card stuck mid-tilt.
+  const [hasHover, setHasHover] = useState(true);
+  useEffect(() => {
+    const mq = window.matchMedia('(hover: hover) and (pointer: fine)');
+    const update = () => setHasHover(mq.matches);
+    update();
+    mq.addEventListener('change', update);
+    return () => mq.removeEventListener('change', update);
+  }, []);
+
   const handleMouseMove = useCallback((e: React.MouseEvent) => {
+    if (!hasHover) return;
     const card = cardRef.current;
     const shine = shineRef.current;
     if (!card || !shine) return;
@@ -35,31 +70,36 @@ export default function ArtCard3D({
     const centerX = rect.width / 2;
     const centerY = rect.height / 2;
 
-    // Tilt: max 8 degrees
     const rotateX = ((y - centerY) / centerY) * -8;
     const rotateY = ((x - centerX) / centerX) * 8;
 
     card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
 
-    // Light reflection position
     const shineX = (x / rect.width) * 100;
     const shineY = (y / rect.height) * 100;
     shine.style.setProperty('--shine-x', `${shineX}%`);
     shine.style.setProperty('--shine-y', `${shineY}%`);
-  }, []);
+  }, [hasHover]);
 
   const handleMouseLeave = useCallback(() => {
+    if (!hasHover) return;
     const card = cardRef.current;
     if (!card) return;
     card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
-  }, []);
+  }, [hasHover]);
+
+  // Build the "medium · dimensions · year" metadata line, omitting empties.
+  const metaLine = [medium, dimensions, year ? String(year) : null]
+    .filter(Boolean)
+    .join(' · ');
 
   return (
     <motion.a
       ref={cardRef}
       href={href}
-      target="_blank"
-      rel="noopener noreferrer"
+      {...(isExternal
+        ? { target: '_blank', rel: 'noopener noreferrer' }
+        : {})}
       className="art-card-3d"
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
@@ -74,31 +114,47 @@ export default function ArtCard3D({
         transition: 'transform 0.15s ease-out, box-shadow 0.4s ease',
       }}
     >
-      <img src={imageSrc} alt={title} loading="lazy" />
+      <img
+        src={imageSrc}
+        alt={title}
+        loading="lazy"
+        style={
+          slug
+            ? ({ viewTransitionName: `work-${slug}` } as React.CSSProperties)
+            : undefined
+        }
+      />
 
-      {/* Light reflection layer */}
       <div ref={shineRef} className="art-card-3d-shine" />
-
-      {/* Red Stripe across the piece */}
       <div className="art-card-3d-stripe" />
 
-      {/* Hover overlay with info */}
       <div className="art-card-3d-overlay">
-        <span className="label">{category}</span>
-        <span
-          className="display-md mt-xs"
-          style={{ fontFamily: 'var(--font-display)' }}
-        >
-          {title}
-        </span>
-        {price && (
-          <span
-            className="label mt-xs"
-            style={{ color: 'var(--stripe)' }}
+        <div className="art-card-caption">
+          <div className="art-card-caption-row">
+            <span>{category}</span>
+            {edition && <span>{edition}</span>}
+          </div>
+
+          <span className="art-card-caption-title">{title}</span>
+
+          {metaLine && <span className="art-card-caption-meta">{metaLine}</span>}
+
+          <div className="art-card-caption-rule" />
+
+          <div
+            className="art-card-caption-row"
+            style={{ color: 'hsla(0, 0%, 100%, 0.85)' }}
           >
-            {price}
-          </span>
-        )}
+            {availability && (
+              <span className={`art-card-caption-availability ${availability}`}>
+                {AVAILABILITY_LABEL[availability]}
+              </span>
+            )}
+            {price && (
+              <span style={{ color: 'var(--stripe)' }}>{price}</span>
+            )}
+          </div>
+        </div>
       </div>
     </motion.a>
   );
