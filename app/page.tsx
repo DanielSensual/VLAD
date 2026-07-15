@@ -135,6 +135,110 @@ export default function HomePage() {
           </div>
         </ScrollReveal>
       </section>
+      {/* Packages — Client Proposal */}
+      <section id="packages" className="section-lg" style={{ background: 'var(--bg-ink)', color: '#fff' }}>
+        <ScrollReveal stagger>
+          <div className="container text-center">
+            <span className="label reveal" style={{ display: 'block', marginBottom: 'var(--space-sm)', color: 'var(--stripe)' }}>
+              Website Packages
+            </span>
+            <h2 className="display-lg reveal" style={{ color: '#fff' }}>Choose Your Tier</h2>
+            <RedStripe variant="wet" width="60px" centered thickness={3} style={{ margin: 'var(--space-md) auto' }} />
+            <p className="body-lg reveal" style={{ maxWidth: '520px', margin: '0 auto var(--space-xl)', color: 'hsla(0,0%,100%,0.6)' }}>
+              Select the package that fits your vision. Every tier includes the gallery-grade site you see here.
+            </p>
+
+            <div className="packages-grid reveal">
+              {/* Tier 1 — Foundation */}
+              <div className="package-card">
+                <span className="label" style={{ color: 'var(--text-muted)' }}>Foundation</span>
+                <div className="package-price">
+                  <span className="package-amount">$1,500</span>
+                  <span className="package-term">one-time</span>
+                </div>
+                <p className="package-tagline">Everything you see — delivered and live.</p>
+                <RedStripe variant="divider" width="40px" centered thickness={2} style={{ margin: 'var(--space-sm) auto' }} />
+                <ul className="package-features">
+                  <li>Full portfolio site as built</li>
+                  <li>20 artwork detail pages</li>
+                  <li>Mobile-optimized gallery</li>
+                  <li>3D tilt cards + lightbox viewer</li>
+                  <li>GSAP horizontal gallery rail</li>
+                  <li>Vercel deployment + domain handoff</li>
+                  <li>SEO + Open Graph optimization</li>
+                </ul>
+                <div className="package-maintenance">
+                  <span className="package-maintenance-price">+ $150<span style={{ fontSize: '0.7em', opacity: 0.6 }}>/mo</span></span>
+                  <span style={{ fontSize: '0.7rem', color: 'hsla(0,0%,100%,0.4)' }}>Ongoing updates &amp; management</span>
+                </div>
+                <a href="https://buy.stripe.com/cNibJ1ffg8jD7OH7vWes00w" target="_blank" rel="noopener noreferrer" className="btn-outline btn-magnetic" style={{ width: '100%', marginTop: 'var(--space-md)' }}>
+                  Select Foundation
+                </a>
+              </div>
+
+              {/* Tier 2 — Commerce */}
+              <div className="package-card package-card--featured">
+                <span className="package-badge">Recommended</span>
+                <span className="label" style={{ color: 'var(--stripe)' }}>Commerce</span>
+                <div className="package-price">
+                  <span className="package-amount">$3,500</span>
+                  <span className="package-term">one-time</span>
+                </div>
+                <p className="package-tagline">Sell directly to collectors from your site.</p>
+                <RedStripe variant="wet" width="40px" centered thickness={2} style={{ margin: 'var(--space-sm) auto' }} />
+                <ul className="package-features">
+                  <li>Everything in Foundation</li>
+                  <li>Stripe payment integration</li>
+                  <li>Shopify Storefront API — live inventory</li>
+                  <li>Collector checkout flow</li>
+                  <li>Client portal — order history &amp; inquiries</li>
+                  <li>Contact form backend (Resend)</li>
+                  <li>Analytics dashboard (GA4 + Vercel)</li>
+                </ul>
+                <div className="package-maintenance">
+                  <span className="package-maintenance-price">+ $250<span style={{ fontSize: '0.7em', opacity: 0.6 }}>/mo</span></span>
+                  <span style={{ fontSize: '0.7rem', color: 'hsla(0,0%,100%,0.4)' }}>Ongoing updates, inventory &amp; management</span>
+                </div>
+                <a href="https://buy.stripe.com/00w9AT7MO6bv0mf3fGes00x" target="_blank" rel="noopener noreferrer" className="btn-solid btn-magnetic" style={{ width: '100%', marginTop: 'var(--space-md)' }}>
+                  Select Commerce
+                </a>
+              </div>
+
+              {/* Tier 3 — Enterprise */}
+              <div className="package-card">
+                <span className="label" style={{ color: 'var(--gilt)' }}>Enterprise</span>
+                <div className="package-price">
+                  <span className="package-amount">$6,500</span>
+                  <span className="package-term">one-time</span>
+                </div>
+                <p className="package-tagline">Your brand as a native mobile experience.</p>
+                <RedStripe variant="divider" width="40px" centered thickness={2} style={{ margin: 'var(--space-sm) auto' }} />
+                <ul className="package-features">
+                  <li>Everything in Commerce</li>
+                  <li>Native iOS app — Apple App Store</li>
+                  <li>Push notifications for new drops</li>
+                  <li>Offline gallery viewing</li>
+                  <li>Exclusive in-app collector access</li>
+                  <li>WebGL 3D artwork viewer</li>
+                  <li>App Store submission &amp; approval</li>
+                  <li>Priority support &amp; feature requests</li>
+                </ul>
+                <div className="package-maintenance">
+                  <span className="package-maintenance-price">+ $500<span style={{ fontSize: '0.7em', opacity: 0.6 }}>/mo</span></span>
+                  <span style={{ fontSize: '0.7rem', color: 'hsla(0,0%,100%,0.4)' }}>App updates, App Store fees &amp; management</span>
+                </div>
+                <a href="https://buy.stripe.com/eVq6oHd78dDXd91bMces00y" target="_blank" rel="noopener noreferrer" className="btn-outline btn-magnetic" style={{ width: '100%', marginTop: 'var(--space-md)', borderColor: 'var(--gilt)', color: 'var(--gilt)' }}>
+                  Select Enterprise
+                </a>
+              </div>
+            </div>
+
+            <p className="reveal" style={{ marginTop: 'var(--space-xl)', fontSize: '0.75rem', color: 'hsla(0,0%,100%,0.35)', maxWidth: '560px', margin: 'var(--space-xl) auto 0' }}>
+              All packages include source code ownership and Vercel hosting setup. Maintenance is optional but recommended for ongoing content updates, security patches, and performance monitoring. Additional developer hours available at <strong style={{ color: 'hsla(0,0%,100%,0.55)' }}>$200/hr</strong>.
+            </p>
+          </div>
+        </ScrollReveal>
+      </section>
 
       <Footer />
     </>
